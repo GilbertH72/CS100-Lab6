@@ -6,7 +6,7 @@ name: CI
 on:
   # Triggers the workflow on push or pull request events but only for the main branch
   push:
-    branches: [ main, atedj001/ci_setup ]
+    branches: [ main, ghern144/passing_tests ]
   pull_request:
     branches: [ main ]
 
@@ -24,6 +24,8 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
+        with:
+            submodules: recursive
 
       # Runs a single command using the runners shell
       - name: Run a one-line script
@@ -34,3 +36,19 @@ jobs:
         run: |
           echo Add other actions to build,
           echo test, and deploy your project.
+
+      # Generate Makefiles for Rectangle and Test
+      - name: Generate MakeFiles
+        run: cmake .
+
+      # Generate the executables for Rectangle and Test
+      - name: Generate Rectangle and Test Executables
+        run: make
+
+      # Run the Executable for Rectangle
+      - name: Run Rectangle Executable
+        run: ./rectangle
+
+      # Run the Executable for Test
+      - name: Run Test Executable
+        run: ./test
